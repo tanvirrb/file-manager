@@ -30,6 +30,26 @@ async function saveFiles(files) {
   }
 }
 
+async function getFiles(publicKey) {
+  try {
+    const publicKeyPath = `./storage/${publicKey}.pub`;
+    const privateKeyPath = `./storage/${publicKey}.pem`;
+    console.info('publicKeyPath', publicKeyPath);
+    console.info('privateKeyPath', privateKeyPath);
+
+    const publicKeyFile = await fsPromises.readFile(publicKeyPath, 'utf-8');
+    const privateKeyFile = await fsPromises.readFile(privateKeyPath, 'utf-8');
+    console.info('publicKeyFile', publicKeyFile);
+    console.info('privateKeyFile', privateKeyFile);
+
+    return { publicKeyFile, privateKeyFile };
+  } catch (error) {
+    console.error(error);
+    throw new Error('Error retrieving files');
+  }
+}
+
 module.exports = {
   saveFiles,
+  getFiles,
 };
