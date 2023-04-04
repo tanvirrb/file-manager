@@ -1,17 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const eventsController = require('../events/events.controller');
-const {
-    createEventValidator,
-    updateEventValidator,
-    getEventsValidator,
-} = require('../events/events.validator');
-const withErrorHandler = require('../helpers/controllerErrorHandler');
+const multer = require('multer');
+const fileController = require('../files/files.controller');
 
-router.post('/', createEventValidator, withErrorHandler(eventsController.createEvent));
-router.get('/', getEventsValidator, withErrorHandler(eventsController.getEvents));
-router.get('/:id', withErrorHandler(eventsController.getEventById));
-router.put('/:id', updateEventValidator, withErrorHandler(eventsController.updateEventById));
-router.delete('/:id', withErrorHandler(eventsController.deleteEventById));
+// Multer Configuration
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post(
+  '/',
+  upload.fields([
+    { name: 'publicKey', maxCount: 1 },
+    { name: 'privateKey', maxCount: 1 },
+  ]),
+  fileController.uploadFiles
+);
 
 module.exports = router;
