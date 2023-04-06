@@ -24,7 +24,10 @@ fs.mkdir(fileDirectory, { recursive: true }, (err) => {
 const app = express();
 app.use(cors());
 
-app.use(logger('dev'));
+console.info(`Environment: ${config.app.env}`);
+if (config.app.env === 'development') {
+  app.use(logger('dev'));
+}
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
