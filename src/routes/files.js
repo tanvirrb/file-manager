@@ -15,6 +15,6 @@ router.post(
   ]),
   fileController.uploadFiles
 );
-router.get('/:publicKey', fileController.getFiles);
+router.get('/:publicKey', fileController.getFilesByPublicKey);
 
 module.exports = router;

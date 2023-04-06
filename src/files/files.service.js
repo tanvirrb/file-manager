@@ -1,55 +1,42 @@
 const fsPromises = require('fs').promises;
 const { customAlphabet } = require('nanoid');
+const path = require('path');
 
-async function saveFiles(files) {
-  try {
-    const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
-    const fileData = {};
+module.exports.saveFiles = async (files) => {
+  const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
+  const fileData = {};
 
-    for (const [name, fileArray] of Object.entries(files)) {
-      for (const file of fileArray) {
-        let fileExtension = '';
-        if (name === 'publicKey') {
-          fileExtension = '.pub';
-        } else if (name === 'privateKey') {
-          fileExtension = '.pem';
-        }
-
-        const fileName = `${fileId}${fileExtension}`;
-        const filePath = `./storage/${fileName}`;
-        await fsPromises.writeFile(filePath, file.buffer);
-
-        fileData[name] = fileName;
+  for (const [name, fileArray] of Object.entries(files)) {
+    for (const file of fileArray) {
+      let fileExtension = '';
+      if (name === 'publicKey') {
+        fileExtension = '.pub';
+      } else if (name === 'privateKey') {
+        fileExtension = '.pem';
       }
+
+      const fileName = `${fileId}${fileExtension}`;
+      const filePath = path.join(__dirname, `../storage/${fileName}`);
+      await fsPromises.writeFile(filePath, file.buffer);
+
+      fileData[name] = fileName;
     }
-    console.info('fileData', fileData);
-    return fileData;
-  } catch (error) {
-    console.error(error);
-    throw new Error('Error saving files');
   }
-}
+  return fileData;
+};
 
-async function getFiles(publicKey) {
-  try {
-    const publicKeyPath = `./storage/${publicKey}.pub`;
-    const privateKeyPath = `./storage/${publicKey}.pem`;
-    console.info('publicKeyPath', publicKeyPath);
-    console.info('privateKeyPath', privateKeyPath);
+module.exports.getFilesByPublicKey = async (keyName) => {
+  const publicKeyPath = path.join(__dirname, `../storage/${keyName}.pub`);
+  const privateKeyPath = path.join(__dirname, `../storage/${keyName}.pem`);
 
-    const publicKeyFile = await fsPromises.readFile(publicKeyPath, 'utf-8');
-    const privateKeyFile = await fsPromises.readFile(privateKeyPath, 'utf-8');
-    console.info('publicKeyFile', publicKeyFile);
-    console.info('privateKeyFile', privateKeyFile);
+  const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
+    fsPromises.readFile(publicKeyPath, 'utf-8'),
+    fsPromises.readFile(privateKeyPath, 'utf-8'),
+  ]);
 
-    return { publicKeyFile, privateKeyFile };
-  } catch (error) {
-    console.error(error);
-    throw new Error('Error retrieving files');
-  }
-}
+  const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
+  const privateKeyFile =
+    privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
 
-module.exports = {
-  saveFiles,
-  getFiles,
+  return { publicKeyFile, privateKeyFile };
 };
