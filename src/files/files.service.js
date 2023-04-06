@@ -16,7 +16,7 @@ module.exports.saveFiles = async (files) => {
       }
 
       const fileName = `${fileId}${fileExtension}`;
-      const filePath = path.join(__dirname, `../storage/${fileName}`);
+      const filePath = path.join(__dirname, `../../storage/${fileName}`);
       await fsPromises.writeFile(filePath, file.buffer);
 
       fileData[name] = fileName;
@@ -26,8 +26,8 @@ module.exports.saveFiles = async (files) => {
 };
 
 module.exports.getFilesByPublicKey = async (keyName) => {
-  const publicKeyPath = path.join(__dirname, `../storage/${keyName}.pub`);
-  const privateKeyPath = path.join(__dirname, `../storage/${keyName}.pem`);
+  const publicKeyPath = path.join(__dirname, `../../storage/${keyName}.pub`);
+  const privateKeyPath = path.join(__dirname, `../../storage/${keyName}.pem`);
 
   const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
     fsPromises.readFile(publicKeyPath, 'utf-8'),

@@ -1,32 +1,7 @@
-const {
-  mysql: { password, host, database, username, dbPort, dialect },
-} = require('./environments');
-
 module.exports = {
-  development: {
-    username: username,
-    password: password,
-    database: database,
-    host: host,
-    dialect: dialect,
-    logging: false,
-    port: dbPort,
-  },
-  test: {
-    username: username,
-    password: password,
-    database: database,
-    host: host,
-    dialect: dialect,
-    logging: false,
-    port: dbPort,
-  },
-  production: {
-    username: username,
-    password: password,
-    database: database,
-    host: host,
-    dialect: dialect,
-    port: dbPort,
+  app: {
+    port: process.env.PORT || 3000,
+    environment: process.env.NODE_ENV || 'development',
+    folder: process.env.FOLDER || 'storage',
   },
 };

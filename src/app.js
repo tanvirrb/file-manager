@@ -1,15 +1,25 @@
 const express = require('express');
-var cors = require('cors');
+const cors = require('cors');
 const logger = require('morgan');
 require('dotenv').config({ path: `${__dirname}/../.env` });
 // const swaggerUi = require('swagger-ui-express');
 // const swaggerApiDoc = require('./config/swagger.json');
-const config = require('./config/environments');
+const config = require('./config/config');
+const fs = require('fs');
 
 const indexRouter = require('./routes');
 const filesRouter = require('./routes/files');
 const globalErrorHandler = require('./helpers/globalErrorHandler');
 const noFoundError = require('./helpers/notFoundError');
+const path = require('path');
+const fileDirectory = path.join(__dirname, `../${config.app.folder}`);
+fs.mkdir(fileDirectory, { recursive: true }, (err) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.info(`Directory created successfully for files at: ${fileDirectory}`);
+  }
+});
 
 const app = express();
 app.use(cors());
