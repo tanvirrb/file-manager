@@ -7,5 +7,6 @@ module.exports = {
     apiRateLimitDownload: process.env.API_RATE_LIMIT_DOWNLOAD || 1000,
     requestLimitUpload: process.env.REQUEST_LIMIT_UPLOAD || 1000,
     requestLimitDownload: process.env.REQUEST_LIMIT_DOWNLOAD || 1000,
+    fileCleanupCronTime: process.env.FILE_CLEANUP_CRON || '* * * * *',
   },
 };

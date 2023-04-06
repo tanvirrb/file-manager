@@ -21,6 +21,8 @@ fs.mkdir(fileDirectory, { recursive: true }, (err) => {
   }
 });
 
+require('./utils/unusedFileDelete.scheduler');
+
 const app = express();
 app.use(cors());
 
