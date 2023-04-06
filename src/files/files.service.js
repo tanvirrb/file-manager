@@ -1,8 +1,10 @@
 const fsPromises = require('fs').promises;
 const { customAlphabet } = require('nanoid');
 const path = require('path');
+const config = require('../config/config');
 
 module.exports.saveFiles = async (files) => {
+  const fileDirectory = config.app.folder;
   const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
   const fileData = {};
 
@@ -16,7 +18,7 @@ module.exports.saveFiles = async (files) => {
       }
 
       const fileName = `${fileId}${fileExtension}`;
-      const filePath = path.join(__dirname, `../../storage/${fileName}`);
+      const filePath = path.join(__dirname, `../../${fileDirectory}/${fileName}`);
       await fsPromises.writeFile(filePath, file.buffer);
 
       fileData[name] = fileName;
@@ -26,8 +28,9 @@ module.exports.saveFiles = async (files) => {
 };
 
 module.exports.getFilesByPublicKey = async (keyName) => {
-  const publicKeyPath = path.join(__dirname, `../../storage/${keyName}.pub`);
-  const privateKeyPath = path.join(__dirname, `../../storage/${keyName}.pem`);
+  const fileDirectory = config.app.folder;
+  const publicKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pub`);
+  const privateKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pem`);
 
   const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
     fsPromises.readFile(publicKeyPath, 'utf-8'),
@@ -42,12 +45,15 @@ module.exports.getFilesByPublicKey = async (keyName) => {
 };
 
 module.exports.deleteFilesByPrivateKey = async (keyName) => {
-  const privateKeyPath = path.join(__dirname, `../../storage/${keyName}.pem`);
-  const publicKeyPath = path.join(__dirname, `../../storage/${keyName}.pub`);
+  const fileDirectory = config.app.folder;
+  const privateKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pem`);
+  const publicKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pub`);
+
   const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
     fsPromises.unlink(publicKeyPath),
     fsPromises.unlink(privateKeyPath),
   ]);
+
   const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
   const privateKeyFile =
     privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
