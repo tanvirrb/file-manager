@@ -82,6 +82,17 @@ describe('File service test suit', () => {
     assert.exists(result.privateKeyFile);
   });
 
+  it('should delete the publicKey and privateKey files', async () => {
+    const fileDirectory = config.app.folder;
+    const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
+    await createTestFiles(fileId, fileDirectory);
+
+    const [err, result] = await _p(fileService.deleteFilesByPrivateKey(fileId));
+
+    assert.isNull(err);
+    assert.exists(result);
+  });
+
   afterEach(async () => {
     const fileDirectory = config.app.folder;
     const directoryPath = path.join(__dirname, `../../${fileDirectory}`);
