@@ -33,4 +33,4 @@ module.exports.deleteFilesByPrivateKey = async (req, res, next) => {
     console.error(error);
     next(error);
   }
-}
+};

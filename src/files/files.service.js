@@ -42,14 +42,15 @@ module.exports.getFilesByPublicKey = async (keyName) => {
 };
 
 module.exports.deleteFilesByPrivateKey = async (keyName) => {
-    const privateKeyPath = path.join(__dirname, `../../storage/${keyName}.pem`);
-    const publicKeyPath = path.join(__dirname, `../../storage/${keyName}.pub`);
-    const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
-        fsPromises.unlink(publicKeyPath),
-        fsPromises.unlink(privateKeyPath),
-    ]);
-    const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
-    const privateKeyFile = privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
+  const privateKeyPath = path.join(__dirname, `../../storage/${keyName}.pem`);
+  const publicKeyPath = path.join(__dirname, `../../storage/${keyName}.pub`);
+  const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
+    fsPromises.unlink(publicKeyPath),
+    fsPromises.unlink(privateKeyPath),
+  ]);
+  const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
+  const privateKeyFile =
+    privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
 
-    return (publicKeyFile === undefined && privateKeyFile === undefined);
-}
+  return publicKeyFile === undefined && privateKeyFile === undefined;
+};
