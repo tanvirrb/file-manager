@@ -5,6 +5,21 @@ const _p = require('../helpers/asyncWrapper');
 const path = require('path');
 const config = require('../config/config');
 const fs = require('fs');
+const { customAlphabet } = require('nanoid');
+
+const createTestFiles = async (fileId, storageFolder) => {
+  const publicKeyPath = path.join(__dirname, `../../${storageFolder}/${fileId}.pub`);
+  const privateKeyPath = path.join(__dirname, `../../${storageFolder}/${fileId}.pem`);
+  const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
+    fsPromises.writeFile(publicKeyPath, 'publicKeyContent'),
+    fsPromises.writeFile(privateKeyPath, 'privateKeyContent'),
+  ]);
+  const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
+  const privateKeyFile =
+    privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
+
+  return !publicKeyFile && !privateKeyFile;
+};
 
 describe('File service test suit', () => {
   before(async () => {
@@ -53,6 +68,18 @@ describe('File service test suit', () => {
     assert.isNull(err);
     assert.exists(result.publicKey);
     assert.exists(result.privateKey);
+  });
+
+  it('should get the publicKey and privateKey files', async () => {
+    const fileDirectory = config.app.folder;
+    const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
+    await createTestFiles(fileId, fileDirectory);
+
+    const [err, result] = await _p(fileService.getFilesByPublicKey(fileId));
+
+    assert.isNull(err);
+    assert.exists(result.publicKeyFile);
+    assert.exists(result.privateKeyFile);
   });
 
   afterEach(async () => {
