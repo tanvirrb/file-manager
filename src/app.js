@@ -24,7 +24,6 @@ fs.mkdir(fileDirectory, { recursive: true }, (err) => {
 const app = express();
 app.use(cors());
 
-console.info(`Environment: ${config.app.env}`);
 if (config.app.env === 'development') {
   app.use(logger('dev'));
 }

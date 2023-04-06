@@ -24,4 +24,8 @@ module.exports = {
     success: 'Files deleted successfully',
     failed: 'Files deletion failed',
   },
+  RATE_LIMIT: {
+    code: 429,
+    message: 'Too many requests, please try again later.',
+  },
 };
