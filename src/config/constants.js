@@ -19,4 +19,9 @@ module.exports = {
     code: 400,
     message: 'bad request',
   },
+  FILE_DELETED: {
+    code: 200,
+    success: 'Files deleted successfully',
+    failed: 'Files deletion failed',
+  },
 };

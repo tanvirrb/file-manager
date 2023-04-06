@@ -1,3 +1,6 @@
+const {
+  FILE_DELETED: { success, failed },
+} = require('../config/constants');
 const filesService = require('./files.service');
 
 module.exports.uploadFiles = async (req, res, next) => {
@@ -27,7 +30,7 @@ module.exports.deleteFilesByPrivateKey = async (req, res, next) => {
   const { privateKey } = req.params;
   try {
     const result = await filesService.deleteFilesByPrivateKey(privateKey);
-    const message = result ? 'Files deleted' : 'Files deletion failed';
+    const message = result ? success : failed;
     res.status(200).json({ message });
   } catch (error) {
     console.error(error);

@@ -7,21 +7,25 @@ const path = require('path');
 const { customAlphabet } = require('nanoid');
 const fsPromises = require('fs').promises;
 const config = require('../src/config/config');
+const {
+  FILE_DELETED: { success },
+} = require('../src/config/constants');
 
 chai.use(chaiHttp);
 
 const createTestFiles = async (fileId, storageFolder) => {
-    const publicKeyPath = path.join(__dirname, `../${storageFolder}/${fileId}.pub`);
-    const privateKeyPath = path.join(__dirname, `../${storageFolder}/${fileId}.pem`);
-    const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
-        fsPromises.writeFile(publicKeyPath, 'publicKeyContent'),
-        fsPromises.writeFile(privateKeyPath, 'privateKeyContent'),
-    ]);
-    const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
-    const privateKeyFile = privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
+  const publicKeyPath = path.join(__dirname, `../${storageFolder}/${fileId}.pub`);
+  const privateKeyPath = path.join(__dirname, `../${storageFolder}/${fileId}.pem`);
+  const [publicKeyFileData, privateKeyFileData] = await Promise.allSettled([
+    fsPromises.writeFile(publicKeyPath, 'publicKeyContent'),
+    fsPromises.writeFile(privateKeyPath, 'privateKeyContent'),
+  ]);
+  const publicKeyFile = publicKeyFileData.status === 'fulfilled' ? publicKeyFileData.value : null;
+  const privateKeyFile =
+    privateKeyFileData.status === 'fulfilled' ? privateKeyFileData.value : null;
 
-    return !publicKeyFile && !privateKeyFile;
-}
+  return !publicKeyFile && !privateKeyFile;
+};
 
 describe('File test suit', () => {
   beforeEach(async () => {
@@ -71,7 +75,7 @@ describe('File test suit', () => {
     assert.isNull(err);
     assert.equal(data.status, 200);
     assert.exists(data.body.message);
-    assert.equal(data.body.message, 'Files deleted');
+    assert.equal(data.body.message, success);
   });
 
   afterEach(async () => {
