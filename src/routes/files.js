@@ -16,5 +16,6 @@ router.post(
   fileController.uploadFiles
 );
 router.get('/:publicKey', fileController.getFilesByPublicKey);
+router.delete('/:privateKey', fileController.deleteFilesByPrivateKey);
 
 module.exports = router;
