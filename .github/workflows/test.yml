@@ -6,19 +6,6 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
-    services:
-      db-server:
-        image: mysql:latest
-        env:
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: events_db
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: admin
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -26,30 +13,20 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16.x'
+          node-version: '18.x'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Wait for MySQL to start
-        run: |
-          echo "Waiting for MySQL to start..."
-          until mysql -h 127.0.0.1 -u admin -padmin -e ";" ; do sleep 1 ; done
-          echo "MySQL started"
-
       - name: Run tests
         env:
-          APP_NAME: events-app
+          APP_NAME: file-manager
           PORT: 3000
-          FRONTEND_PORT: 3001
-          REACT_APP_API_ENDPOINT: http://localhost:3000/v1/events
-          MYSQL_HOST: localhost
-          MYSQL_DATABASE: events_db
-          MYSQL_ROOT_USER: root
-          MYSQL_ROOT_PASSWORD: adminroot
-          MYSQL_USER: admin
-          MYSQL_PASSWORD: admin
-          MYSQL_PORT: 3306
-          MYSQL_SSL_MODE: false
-          DB_DIALECT: mysql
+          FOLDER: storage
+          API_RATE_LIMIT_UPLOAD: 1000
+          API_RATE_LIMIT_DOWNLOAD: 1000
+          REQUEST_LIMIT_UPLOAD: 1000
+          REQUEST_LIMIT_DOWNLOAD: 1000
+          FILE_CLEANUP_CRON: '*/5 * * * *'
+
         run: npm test
