@@ -52,17 +52,15 @@ describe('File test suit', () => {
     assert.exists(data.body.privateKey);
   });
 
-  it('Should get files by public key', async () => {
-    const fileDirectory = config.app.folder;
+  it('should return files as stream by publicKey', async function () {
+    const fileData = 'test data';
     const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
-    await createTestFiles(fileId, fileDirectory);
+    await createTestFiles(fileId, config.app.folder, fileData);
 
-    const [err, data] = await _p(chai.request(app).get(`/v1/files/${fileId}`));
-
+    const [err, res] = await _p(chai.request(app).get(`/v1/files/${fileId}`));
     assert.isNull(err);
-    assert.equal(data.status, 200);
-    assert.exists(data.body.publicKey);
-    assert.exists(data.body.privateKey);
+    assert.equal(res.status, 200);
+    assert.strictEqual(res.header['content-type'], 'application/octet-stream');
   });
 
   it('Should delete files by private key', async () => {
