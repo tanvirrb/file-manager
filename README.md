@@ -50,10 +50,6 @@ npm start
 
 The app REST API will be available at http://localhost:3000/v1/files
 
-[//]: # (The OpenApi documentation will be available at http://localhost:3000/v1/api-docs)
-
-[//]: # (The Postman collection will be available at my Github gist [here]&#40;https://gist.github.com/tanvirrb/ff4928661b79a607bbb8ce4d00c561ad&#41;)
-
 
 ## Files REST API
 
