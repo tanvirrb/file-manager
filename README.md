@@ -1,16 +1,12 @@
-[![Test](https://github.com/tanvirrb/event-app/actions/workflows/test.yml/badge.svg)](https://github.com/tanvirrb/event-app/actions/workflows/test.yml)
+[![Test](https://github.com/tanvirrb/event-app/actions/workflows/test.yml/badge.svg)](https://github.com/tanvirrb/file-manager/actions/workflows/test.yml)
 
-# Event App
+# File Manager API
 
-This is a simple event app built using React JS and Node JS. The app allows users to create, retrieve, update and delete events. The app is built using the following technologies:
+This is a simple file manager API built using Node JS. The app allows users to create, retrieve and delete files. The API is built using the following technologies:
 
 * [Node.js](https://nodejs.org/en/) - The JavaScript runtime used
 * [Express](https://expressjs.com/) - The web framework used
-* [React](https://reactjs.org/) - The JavaScript library used
-* [MySQL](https://www.mysql.com/) - The database used
-* [Sequelize](https://sequelize.org/) - The ORM used
-* [Docker](https://www.docker.com/) - The containerization platform used
-* [Docker Compose](https://docs.docker.com/compose/) - The tool for defining and running multi-container Docker applications
+* [Node-cron](https://www.npmjs.com/package/node-cron) - The cron job scheduler used
 * [Mocha](https://mochajs.org/) - The testing framework used
 * [Chai](https://www.chaijs.com/) - The assertion library used
 * [ChaiHttp](https://www.chaijs.com/plugins/chai-http/) - The HTTP integration testing plugin for Chai
@@ -22,12 +18,8 @@ This is a simple event app built using React JS and Node JS. The app allows user
 
 ### Prerequisites
 
-- Docker
-- Docker Composer
 - Node JS
-- React JS
 - NPM
-- MySQL
 - Git
 
 ### Installation
@@ -35,13 +27,13 @@ This is a simple event app built using React JS and Node JS. The app allows user
 Clone the repository
 
 ```bash
-git clone git@github.com:tanvirrb/event-app.git
+git clone git@github.com:tanvirrb/file-manager.git
 ```
 
 Change directory to the project root
 
 ```bash
-cd event-app
+cd file-manager
 ```
 
 create environment variable file from example file
@@ -53,210 +45,100 @@ cp .env.example .env
 Start the app
 
 ```bash
-npm run docker:up
+npm start
 ```
 
-Docker will handle the rest. From spinning up the containers to installing the dependencies and running the app. sometimes it might take a while to install the dependencies. So be patient. Wait for the message in terminal to display the following message:
+The app REST API will be available at http://localhost:3000/v1/files
 
-```
- webpack compiled successfully
-```
-This means the app is ready to be used.
+[//]: # (The OpenApi documentation will be available at http://localhost:3000/v1/api-docs)
 
-The app REST API will be available at http://localhost:3000/v1/events
-
-The app frontend will be available at http://localhost:3001
-
-The OpenApi documentation will be available at http://localhost:3000/v1/api-docs
-
-The Postman collection will be available at my Github gist [here](https://gist.github.com/tanvirrb/ff4928661b79a607bbb8ce4d00c561ad)
-
-## Troubleshooting
-Sometimes the app might not be available at the above URLs. In that case, you can check the logs of the containers to see what's going on. If any error occurs, try closing the docker compose by pressing `Ctrl + C` or  `Ctrl + Z` or any other key combination that works on your terminal. Then run the clean up command:
-    
-```bash
-npm run docker:down
-```
-
-Then rebuild the app by running the following command:
-
-```bash
-npm run docker:rebuild
-```
-
-Then start the app again by running the following command:
-
-```bash
-npm run docker:up
-```
+[//]: # (The Postman collection will be available at my Github gist [here]&#40;https://gist.github.com/tanvirrb/ff4928661b79a607bbb8ce4d00c561ad&#41;)
 
 
-## Event REST API
+## Files REST API
 
-The Event REST API is an API for managing events. It allows users to create, retrieve, update and delete events. The API is built using Node.js and Express JS in the backend, and MySQL for data storage.
+The File REST API is an API for managing files. The API allows users to create, retrieve and delete files.
 
 #### Base URL for the API http://localhost:3000/v1
 ### API Endpoints
 
-### `GET /events?pageNumber=1&pageSize=5`
-
-Retrieves a list of all events.
-
-Request Parameters
-
-| Parameter    |In | Type   | Required | Description         |
-| ------------ |---|--------|----------| ------------------- |
-| pageNumber   | query | number | yes      | The page number of the events. |
-| pageSize     | query | number | yes        | The number of events per page. |
-
-
-#### Response
-
-```json
-{
-  "pageNumber": "1",
-  "pageSize": "5",
-  "totalEvents": 3,
-  "data": [
-    {
-      "id": 3,
-      "name": "Birthday Party",
-      "location": "Bangladesh",
-      "date": "2023-02-26T00:00:00.000Z",
-      "createdAt": "2023-02-20T08:22:23.000Z",
-      "updatedAt": "2023-02-20T08:22:23.000Z"
-    },
-    {
-      "id": 2,
-      "name": "Football Match",
-      "location": "Brazil",
-      "date": "2023-02-22T00:00:00.000Z",
-      "createdAt": "2023-02-20T08:21:22.000Z",
-      "updatedAt": "2023-02-20T08:21:22.000Z"
-    },
-    {
-      "id": 1,
-      "name": "Test Event",
-      "location": "Bangladesh",
-      "date": "2023-02-07T00:00:00.000Z",
-      "createdAt": "2023-02-20T08:20:41.000Z",
-      "updatedAt": "2023-02-20T08:20:41.000Z"
-    }
-  ]
-}
-
-```
-
-### `GET /events/:id`
-Retrieves a specific event by ID. 
+### `POST /files`
+Upload a new pair of public and private keys.
 
 Request Parameters
 
-| Parameter | In |Type   | Required | Description         |
-| --------- |---|--------| -------- | ------------------- |
-| id        | route param | number | yes      | The ID of the event. |
-
-#### Response
-
-```json
-{
-  "data": {
-    "id": 1,
-    "name": "Test Event",
-    "location": "Bangladesh",
-    "date": "2023-02-07T00:00:00.000Z",
-    "updatedAt": "2023-02-20T08:20:41.349Z",
-    "createdAt": "2023-02-20T08:20:41.349Z"
-  }
-}
-```
-
-### `POST /events`
-Creates a new event.
-
-Request Parameters
-
-| Parameter | In          | Type   | Required | Description         |
-| --------- |-------------|--------| -------- | ------------------- |
-| name      | body        | string | yes     | The name of the event. |
-| location  | body        | string | yes     | The location of the event. |
-| date      | body        | string | yes     | The date of the event. |
+| Parameter  | In          | Type | Required | Description          |
+|------------|-------------|------| ---- |----------------------|
+| privateKey | body        | file | yes | The privateKey file  |
+| publicKey  | body        | file | yes | The publicKey file   |
 
 Request Body
-```json
-{
-  "name": "Birthday Party",
-  "location": "Bangladesh",
-  "date": "2023-02-20"
-}
+```form-data
+privateKey: file
+publicKey: file
 ```
 
 #### Response
 
 ```json
 {
-  "data": {
-    "id": 1,
-    "name": "Test Event",
-    "location": "Bangladesh",
-    "date": "2023-02-07T00:00:00.000Z",
-    "updatedAt": "2023-02-20T08:20:41.349Z",
-    "createdAt": "2023-02-20T08:20:41.349Z"
-  }
+  "publicKey": "EFNXRGMA.pub",
+  "privateKey": "EFNXRGMA.pem"
 }
 ```
 
-### `PUT /events/:id`
-Updates an existing event.
+### `GET /files/:publicKey`
+Retrieves a pair of public and private keys by public key ID.
 
 Request Parameters
 
-| Parameter | In          | Type   | Required | Description         |
-| --------- |-------------|--------| -------- | ------------------- |
-| id        | route param | number | yes      | The ID of the event. |
-| name      | body        | string | no     | The name of the event. |
-| location  | body        | string | no     | The location of the event. |
-| date      | body        | string | no     | The date of the event. |
-
-Request Body
-```json
-{
-  "name": "Football Match",
-  "location": "Brazil",
-  "date": "2023-02-22"
-}
-```
+| Parameter | In          | Type   | Required | Description      |
+|-----------|-------------|--------| -------- |------------------|
+| publicKey | route param | string | yes      | The publicKey ID |
 
 #### Response
 
-```json
-{
-  "data": {
-    "id": 1,
-    "name": "Football Match",
-    "location": "Brazil",
-    "date": "2023-02-22T00:00:00.000Z",
-    "updatedAt": "2023-02-22T08:20:41.349Z",
-    "createdAt": "2023-02-22T08:20:41.349Z"
-  }
-}
+```octet-stream
+-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA1R+9hEAGlPldoOmnYq3F
+pG1CZmViThaD1/AaBdj9zV/WtllzxJt8Ndr5w5P5oWTvm2An/1rE5t+5oh9zgczx
+hKP+sJp0tY+0peAYBASZv5r5rJlQyaQcR0ts+LLy+aJhFCKfY3jr3eDpSzJZgr58
+Zd8TJ3q9XIPpB1x6cg+V6QmJlR1m6flAe+aPMfMKo4DPn/9C9g2vGy4H4IYOFIxw
+mmV7cscFZI98V8tX+g5ir1BpHx8tLLKG/cg+PAS5Y5w5m5EEN88m2X9qwR+GQ2JF
+fEjbj/UeC3KLq3a+KbeMYJFZ1N9XWezT3TcUk+l6Uv0ujlJ0R04nmOWQNLf++sfl
+eQIDAQAB
+-----END PUBLIC KEY-----
+-----BEGIN ENCRYPTED PRIVATE KEY-----
+MIICzzBJBgkqhkiG9w0BBQ0wPDAbBgkqhkiG9w0BBQwwDgQI9yKxWnGvH3wCAggA
+MBQGCCqGSIb3DQMHBAiCAhJX9LYy4xQSCBMK+UblAPDz6N8r6rJQoDD3qo+FGCGG
+1a6eEWclLJwCgsyoHDhk+7BcJZmbHfd7z0fEgQAK9LJmFty5V5F/dotY6RivU+id
+zPOr82UcUXebfX9jJDUTh8+LbCfYnKuG7zH21ZfPv7+vjhKCCaA9D02ncFk5l5kt
+bY0t49oQdKzZnwvHyC1bnEae1uvHSD+UNW8PvD0g50oqTzTgeT0W/CZzOJh/v+cp
+XfnL1s4LM4hKsOq3Tqf3ulzZSgmhDv46zmgd+iM/E9RBRa4c4gLjUVs04ChnKPFD
+t2jB2FkzuRbRJVP+O23OvahpL/b+NfrJELWyfDe3q3Ams9E+QmSDTgTUDGQr0Tr0
+NU1wY8OyMkkhMGJtyxd/Xc0MknOubg1p+u33SfLa/A7VWKMKnJ+I7g69oz4o4v9X
+j8mkzOb6ZI+DOqjJ47VQdY8MHL6e78x+D5vJByAfU6ajvOOeQwW8fp3RG1zSl5xC
+U5RM5U5OGeOtxaEBxrsR6vNc7w0HSAKZV7gZ1NvJS1+jegW8F4ybkQ/4fhIvzUIj
+d8YrGZ2CgofTtKs9H+09exavJhACzdEuLzi46BnMNpByYodjaMwsZzsiMhG9d2LS
+jK3q/IyAZHTwyfiB+ZXUEjwG1ZbhLnhFJhRtpmQdJ/Eccssy3ITfobgnJ+sTtj1d
+Y+0o/MJsjhTMTNt9Av0t43DbJy0b60t/U1vJ7VWnBL8Ivt7npg+Z1fBJJXW/nb8C
+2VxIFB4LQFknWwYJz3nsZ5/KdbZ5me5cJpM8+U6y
 ```
 
-### `DELETE /events/:id`
-
-Deletes an existing event.
+### `DELETE /files/:privateKey`
+Deletes a pair of public and private keys by private key ID.
 
 Request Parameters
 
-| Parameter | In |Type   | Required | Description         |
-| --------- |---|--------| -------- | ------------------- |
-| id        | route param | number | yes      | The ID of the event. |
+| Parameter | In          | Type   | Required | Description       |
+| --------- |-------------|--------|----------|-------------------|
+| publicKey | route param | string | yes      | The privateKey ID |
 
 #### Response
 
 ```json
 {
-  "data": true
+  "message": "Files deletion failed"
 }
 ```
 
@@ -264,26 +146,7 @@ Request Parameters
 ### Running the tests
 
 ```bash
-npm run test:docker
-```
-
-## Troubleshooting
-Sometimes the tests might fail due to the database connection. If that happens, close the docker compose by pressing `Ctrl + C` or  `Ctrl + Z` or any other key combination that works on your terminal. Then run the clean up command:
-
-```bash
-npm run posttest:docker
-```
-
-Rebuild the docker compose for test: 
-
-```bash
-npm run test:docker:rebuild
-```
-
-Then run the tests again:
-
-```bash
-npm run test:docker
+npm test
 ```
 
 
