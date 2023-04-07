@@ -4,6 +4,13 @@ const {
 const filesService = require('./files.service');
 const { Readable } = require('stream');
 
+/**
+ * Uploads files to the server
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 module.exports.uploadFiles = async (req, res, next) => {
   try {
     const { publicKey, privateKey } = await filesService.saveFiles(req.files);
@@ -15,6 +22,13 @@ module.exports.uploadFiles = async (req, res, next) => {
   }
 };
 
+/**
+ * Gets files by public key ID
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 module.exports.getFilesByPublicKey = async (req, res, next) => {
   try {
     const publicKey = req.params.publicKey;
@@ -39,6 +53,13 @@ module.exports.getFilesByPublicKey = async (req, res, next) => {
   }
 };
 
+/**
+ * Deletes files by private key ID
+ * @param req
+ * @param res
+ * @param next
+ * @returns {Promise<void>}
+ */
 module.exports.deleteFilesByPrivateKey = async (req, res, next) => {
   const { privateKey } = req.params;
   try {

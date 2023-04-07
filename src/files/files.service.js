@@ -3,6 +3,11 @@ const { customAlphabet } = require('nanoid');
 const path = require('path');
 const config = require('../config/config');
 
+/**
+ * Saves files to the file system
+ * @param files
+ * @returns {Promise<{}>}
+ */
 module.exports.saveFiles = async (files) => {
   const fileDirectory = config.app.folder;
   const fileId = customAlphabet('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 8)();
@@ -27,6 +32,11 @@ module.exports.saveFiles = async (files) => {
   return fileData;
 };
 
+/**
+ * Gets files from the file system by public key ID
+ * @param keyName
+ * @returns {Promise<{privateKeyFile: Buffer, publicKeyFile: Buffer}>}
+ */
 module.exports.getFilesByPublicKey = async (keyName) => {
   const fileDirectory = config.app.folder;
   const publicKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pub`);
@@ -44,6 +54,11 @@ module.exports.getFilesByPublicKey = async (keyName) => {
   return { publicKeyFile, privateKeyFile };
 };
 
+/**
+ * Deletes files from the file system by private key ID
+ * @param keyName
+ * @returns {Promise<boolean>}
+ */
 module.exports.deleteFilesByPrivateKey = async (keyName) => {
   const fileDirectory = config.app.folder;
   const privateKeyPath = path.join(__dirname, `../../${fileDirectory}/${keyName}.pem`);
